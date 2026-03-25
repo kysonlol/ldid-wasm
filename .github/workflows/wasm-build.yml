@@ -31,7 +31,7 @@ jobs:
           source ./emsdk_env.sh
           
           cd $GITHUB_WORKSPACE
-          emcxx -O2 -std=c++11 \
+          /home/runner/emsdk/upstream/emscripten/emcxx -O2 -std=c++11 \
             -I. \
             $(pkg-config --cflags libplist-2.0 libcrypto 2>/dev/null || echo "") \
             ldid.cpp \
