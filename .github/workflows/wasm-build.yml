@@ -42,7 +42,7 @@ jobs:
             -o ldid.js
 
       - name: Upload WASM artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ldid-wasm
           path: |
