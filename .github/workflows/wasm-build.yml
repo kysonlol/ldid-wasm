@@ -21,7 +21,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libplist-dev libssl-dev pkg-config
 
-      - name: Install Emscripten
+      - name: Install Emscripten and compile
         run: |
           cd ~
           git clone https://github.com/emscripten-core/emsdk.git
@@ -29,11 +29,8 @@ jobs:
           ./emsdk install latest
           ./emsdk activate latest
           source ./emsdk_env.sh
-          emcc --version
-
-      - name: Compile with Emscripten
-        run: |
-          source ~/emsdk/emsdk_env.sh
+          
+          cd $GITHUB_WORKSPACE
           emcxx -O2 -std=c++11 \
             -I. \
             $(pkg-config --cflags libplist-2.0 libcrypto 2>/dev/null || echo "") \
@@ -42,7 +39,7 @@ jobs:
             -o ldid.js
 
       - name: Upload WASM artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: ldid-wasm
           path: |
