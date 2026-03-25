@@ -16,17 +16,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Emscripten
-        uses: emscripten-core/emsdk-action@v1.0.0
-
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libplist-dev libssl-dev pkg-config
 
+      - name: Install Emscripten
+        run: |
+          cd ~
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          ./emsdk install latest
+          ./emsdk activate latest
+          source ./emsdk_env.sh
+          emcc --version
+
       - name: Compile with Emscripten
         run: |
-          source /opt/emsdk/emsdk_env.sh
+          source ~/emsdk/emsdk_env.sh
           emcxx -O2 -std=c++11 \
             -I. \
             $(pkg-config --cflags libplist-2.0 libcrypto 2>/dev/null || echo "") \
@@ -35,7 +42,7 @@ jobs:
             -o ldid.js
 
       - name: Upload WASM artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: ldid-wasm
           path: |
