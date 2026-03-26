@@ -30,8 +30,12 @@ jobs:
           ./emsdk activate latest
           source ./emsdk_env.sh
           
+          # Verify emcc is available
+          which emcc
+          emcc --version
+          
           cd $GITHUB_WORKSPACE
-          /home/runner/emsdk/upstream/emscripten/emcxx -O2 -std=c++11 \
+          emcc -O2 -std=c++11 \
             -I. \
             $(pkg-config --cflags libplist-2.0 libcrypto 2>/dev/null || echo "") \
             ldid.cpp \
