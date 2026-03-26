@@ -30,16 +30,15 @@ jobs:
           ./emsdk activate latest
           source ./emsdk_env.sh
           
-          # Verify emcc is available
-          which emcc
-          emcc --version
+          # Install Emscripten ports
+          embuilder build openssl zlib
           
           cd $GITHUB_WORKSPACE
           emcc -O2 -std=c++11 \
             -I. \
-            $(pkg-config --cflags libplist-2.0 libcrypto 2>/dev/null || echo "") \
+            -s USE_OPENSSL=1 \
+            -s USE_ZLIB=1 \
             ldid.cpp \
-            $(pkg-config --libs libplist-2.0 libcrypto 2>/dev/null || echo "-lcrypto") \
             -o ldid.js
 
       - name: Upload WASM artifacts
